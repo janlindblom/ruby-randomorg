@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "dotenv"
+Dotenv.load
+require "random_org"
+
+RandomOrg.configure do |config|
+  config.api_key = ENV['RANDOM_ORG_API_KEY']
+end
+
+require "pry"
+Pry.start
