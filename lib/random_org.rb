@@ -50,7 +50,7 @@ module RandomOrg
       max = 1
       req = RandomOrg::ApiClient.build_request(:generate_decimal_fractions, {n: 1, "decimalPlaces" => 16, replacement: true})
     else
-      max = n
+      max = n - 1 # random.org treats the range as inclusive
       req = RandomOrg::ApiClient.build_request(:generate_integers, {n: 1, min: min, max: max, replacement: true, base: 10})
     end
 
