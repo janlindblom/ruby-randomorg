@@ -1,15 +1,15 @@
 require "random_org/version"
 require "random_org/configuration"
-require "random_org/wrong_api_key_exception"
-require "random_org/api_server_exception"
-require "rest-client"
+require "random_org/api_client"
+require "random_org/rng"
 
 # This library is an interface to the random.org random number generator API
 # which generates true random numbers through data gathered from atmospheric
 # noise.
 #
 # This library is implemented as a drop-in replacement for SecureRandom, giving
-# you the same methods with the same parameters.
+# you the same methods with the same parameters and mimicing the behaviour of
+# the corresponding method in SecureRandom.
 module RandomOrg
 
   # Modify the current configuration.
@@ -48,13 +48,13 @@ module RandomOrg
 
     if n == 0
       max = 1
-      req = build_request(:generate_decimal_fractions, {n: 1, "decimalPlaces" => 16, replacement: true})
+      req = RandomOrg::ApiClient.build_request(:generate_decimal_fractions, {n: 1, "decimalPlaces" => 16, replacement: true})
     else
       max = n
-      req = build_request(:generate_integers, {n: 1, min: min, max: max, replacement: true, base: 10})
+      req = RandomOrg::ApiClient.build_request(:generate_integers, {n: 1, min: min, max: max, replacement: true, base: 10})
     end
 
-    response = perform_request(req)
+    response = RandomOrg::ApiClient.perform_request(req)
     response["result"]["random"]["data"].first
   end
 
@@ -66,8 +66,8 @@ module RandomOrg
   def self.hex(n=nil)
     n ||= 16
     size = n * 8
-    req = build_request(:generate_blobs, {n: 1, size: size, format: "hex"})
-    response = perform_request(req)
+    req = RandomOrg::ApiClient.build_request(:generate_blobs, {n: 1, size: size, format: "hex"})
+    response = RandomOrg::ApiClient.perform_request(req)
     response["result"]["random"]["data"].first
   end
 
@@ -79,8 +79,8 @@ module RandomOrg
   def self.base64(n=nil)
     n ||= 16
     size = n * 8
-    req = build_request(:generate_blobs, {n: 1, size: size, format: "base64"})
-    response = perform_request(req)
+    req = RandomOrg::ApiClient.build_request(:generate_blobs, {n: 1, size: size, format: "base64"})
+    response = RandomOrg::ApiClient.perform_request(req)
     response["result"]["random"]["data"].first
   end
 
@@ -107,53 +107,14 @@ module RandomOrg
   #
   # See RFC 4122 for details of UUID.
   def self.uuid
-    req = build_request(:generate_uuids, {n: 1})
-    response = perform_request(req)
+    req = RandomOrg::ApiClient.build_request(:generate_uuids, {n: 1})
+    response = RandomOrg::ApiClient.perform_request(req)
     response["result"]["random"]["data"].first
   end
-
-  private
 
   class << self
     attr_accessor :configuration
   end
 
-  def self.build_request(which_request, args = nil)
-    req = base_request
-    req[:params] = args.merge({"apiKey" => configuration.api_key})
 
-    if which_request == :generate_integers
-      req.merge!({method: "generateIntegers"})
-    elsif which_request == :generate_decimal_fractions
-      req.merge!({method: "generateDecimalFractions"})
-    elsif which_request == :generate_blobs
-      req.merge!({method: "generateBlobs"})
-    elsif which_request == :generate_uuids
-      req.merge!({method: "generateUUIDs"})
-    end
-    req
-  end
-
-  def self.base_request
-    {
-      jsonrpc: "2.0",
-      id: 1 + (Random.rand * 9999).to_i
-    }
-  end
-
-  def self.perform_request(req)
-    response = RestClient.post(@endpoint_uri, req.to_json)
-    case response.code
-    when 200
-      return JSON.parse(response.body)
-    when 400
-      raise WrongApiKeyException.new("Wrong or missing API key, check your configuration.")
-    when 500
-      raise ApiServerException.new("Something went wrong from the random.org API. Try again or check their service for information.")
-    else
-      return nil
-    end
-  end
-
-  @endpoint_uri = "https://api.random.org/json-rpc/1/invoke"
 end
