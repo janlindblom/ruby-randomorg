@@ -55,7 +55,7 @@ module RandomOrg
     end
 
     response = RandomOrg::ApiClient.perform_request(req)
-    response["result"]["random"]["data"].first
+    response["result"]["random"]["data"].first # TODO: take care of random failures on this line.
   end
 
   # RandomOrg.hex generates a random hex string.
