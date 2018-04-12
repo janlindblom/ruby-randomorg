@@ -8,17 +8,17 @@ end
 
 describe RandomOrg::Configuration do
   it 'accepts an API key in the configuration object' do
-    expect(RandomOrg.configuration.respond_to? :api_key).to be true
+    expect(RandomOrg.configuration.respond_to?(:api_key)).to be true
   end
 end
 
 describe RandomOrg::Rng do
   it 'responds to #rand' do
-    expect(RandomOrg::Rng.new.respond_to? :rand).to be true
+    expect(RandomOrg::Rng.new.respond_to?(:rand)).to be true
   end
 end
 
-context "With an API key and live internet connection" do
+context 'With an API key and live internet connection' do
   before(:context) do
     expect(ENV['RANDOM_ORG_API_KEY']).to_not be_nil
     expect(ENV['RANDOM_ORG_API_KEY']).to be_a String
@@ -36,7 +36,7 @@ context "With an API key and live internet connection" do
       end
 
       it 'can return a random integer in a given interval 0 <= n < max' do
-        max = 1 + Random.rand(9)
+        max = Random.rand(1..9)
         rndnum = RandomOrg.random_number(max)
 
         expect(rndnum).to be_a Integer
@@ -76,7 +76,7 @@ context "With an API key and live internet connection" do
 
         expect(rndbstr).to be_a String
         expect(rndbstr).to match(/^([A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{4}|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{2}==)$/)
-        expect(rndbstr.unpack("m*")[0].size).to eq(16)
+        expect(rndbstr.unpack('m*')[0].size).to eq(16)
       end
 
       it 'returns a base64 encoded string with a given number of random bytes if a numerical argument is passed' do
@@ -85,7 +85,7 @@ context "With an API key and live internet connection" do
 
         expect(rndbstr).to be_a String
         expect(rndbstr).to match(/^([A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{4}|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{2}==)$/)
-        expect(rndbstr.unpack("m*")[0].size).to eq(size)
+        expect(rndbstr.unpack('m*')[0].size).to eq(size)
       end
     end
   end
@@ -104,7 +104,7 @@ context "With an API key and live internet connection" do
         expect(rndnum).to be < 1.0
       end
 
-      it "can return a random float in a given interval 0.0 <= n < max" do
+      it 'can return a random float in a given interval 0.0 <= n < max' do
         max = Random.rand(100.0)
         rndnum = @rng.rand(max)
 
@@ -113,7 +113,7 @@ context "With an API key and live internet connection" do
         expect(rndnum).to be < max
       end
 
-      it "can return a random integer in a given interval 0 <= n < max" do
+      it 'can return a random integer in a given interval 0 <= n < max' do
         max = Random.rand(100)
         rndnum = @rng.rand(max)
 
@@ -122,7 +122,7 @@ context "With an API key and live internet connection" do
         expect(rndnum).to be < max
       end
 
-      it "can return a random element in a given Range 0..n" do
+      it 'can return a random element in a given Range 0..n' do
         range = 0..Random.rand(10)
         rndnum = @rng.rand(range)
 

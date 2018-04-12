@@ -1,6 +1,6 @@
-require "rest-client"
-require "random_org/wrong_api_key_exception"
-require "random_org/api_server_exception"
+require 'rest-client'
+require 'random_org/wrong_api_key_error'
+require 'random_org/api_server_error'
 
 module RandomOrg
   # The API client responsible for making all the calls.
@@ -13,17 +13,19 @@ module RandomOrg
     # @return [Hash] prebuilt request
     def self.build_request(which_request, args = nil)
       req = base_request
-      req[:params] = args.merge({"apiKey" => RandomOrg.configuration.api_key})
+      req[:params] = args.merge('apiKey' => RandomOrg.configuration.api_key)
 
-      if which_request == :generate_integers
-        req.merge!({method: "generateIntegers"})
-      elsif which_request == :generate_decimal_fractions
-        req.merge!({method: "generateDecimalFractions"})
-      elsif which_request == :generate_blobs
-        req.merge!({method: "generateBlobs"})
-      elsif which_request == :generate_uuids
-        req.merge!({method: "generateUUIDs"})
+      case which_request
+      when :generate_integers
+        req[:method] = 'generateIntegers'
+      when :generate_decimal_fractions
+        req[:method] = 'generateDecimalFractions'
+      when :generate_blobs
+        req[:method] = 'generateBlobs'
+      when :generate_uuids
+        req[:method] = 'generateUUIDs'
       end
+
       req
     end
 
@@ -36,21 +38,19 @@ module RandomOrg
       when 200
         return JSON.parse(response.body)
       when 400
-        raise WrongApiKeyException.new("Wrong or missing API key, check your configuration.")
+        raise WrongApiKeyException, 'Wrong or missing API key, check your configuration.'
       when 500
-        raise ApiServerException.new("Something went wrong from the random.org API. Try again or check their service for information.")
+        raise ApiServerException, 'Something went wrong from the random.org API. Try again or check their service for information.'
       else
         return nil
       end
     end
 
-    @endpoint_uri = "https://api.random.org/json-rpc/1/invoke"
+    @endpoint_uri = 'https://api.random.org/json-rpc/1/invoke'
 
-    private
-
-    def self.base_request
+    private_class_method def self.base_request
       {
-        jsonrpc: "2.0",
+        jsonrpc: '2.0',
         id: 1 + (Random.rand * 9999).to_i
       }
     end
