@@ -1,5 +1,7 @@
 # RandomOrg
 
+[![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/janlindblom/ruby-randomorg.png)](https://bitbucket.org/janlindblom/ruby-randomorg)
+
 Access true random numbers through the random.org API!
 
 See https://random.org/ for the specifics of the random.org services and their [API](https://api.random.org/json-rpc/1/).
