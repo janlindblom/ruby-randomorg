@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: randomorg 0.1.0 ruby lib
+# stub: randomorg 0.1.1a ruby lib
 
 Gem::Specification.new do |s|
   s.name = "randomorg".freeze
-  s.version = "0.1.0"
+  s.version = "0.1.1a"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.date = "2018-04-12"
   s.description = "Ruby-RandomOrg helps you make sure that random number of yours really is, you know, random.".freeze
   s.email = ["janlindblom@fastmail.fm".freeze]
-  s.files = [".editorconfig".freeze, ".gitignore".freeze, ".rspec".freeze, "CODE_OF_CONDUCT.md".freeze, "Gemfile".freeze, "LICENSE.txt".freeze, "README.md".freeze, "Rakefile".freeze, "VERSION".freeze, "bin/console".freeze, "bin/setup".freeze, "bitbucket-pipelines.yml".freeze, "lib/random_org.rb".freeze, "lib/random_org/api_client.rb".freeze, "lib/random_org/api_error.rb".freeze, "lib/random_org/api_server_error.rb".freeze, "lib/random_org/argument_error.rb".freeze, "lib/random_org/configuration.rb".freeze, "lib/random_org/rng.rb".freeze, "lib/random_org/wrong_api_key_error.rb".freeze, "ruby-randomorg.gemspec".freeze]
+  s.files = [".editorconfig".freeze, ".gitignore".freeze, ".rspec".freeze, "CODE_OF_CONDUCT.md".freeze, "Gemfile".freeze, "LICENSE.txt".freeze, "README.md".freeze, "Rakefile".freeze, "VERSION".freeze, "bin/console".freeze, "bin/setup".freeze, "bitbucket-pipelines.yml".freeze, "lib/random_org.rb".freeze, "lib/random_org/api_client.rb".freeze, "lib/random_org/api_error.rb".freeze, "lib/random_org/api_server_error.rb".freeze, "lib/random_org/argument_error.rb".freeze, "lib/random_org/configuration.rb".freeze, "lib/random_org/rng.rb".freeze, "lib/random_org/wrong_api_key_error.rb".freeze, "randomorg.gemspec".freeze]
   s.homepage = "https://bitbucket.org/janlindblom/ruby-randomorg".freeze
   s.licenses = ["MIT".freeze]
   s.rubygems_version = "2.6.13".freeze
