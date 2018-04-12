@@ -54,7 +54,7 @@ context 'With an API key and live internet connection' do
       end
 
       it 'returns a string with a given number random bytes if a numerical argument is passed' do
-        size = Random.rand(24)
+        size = 1 + Random.rand(23)
         rndstr = RandomOrg.random_bytes(size)
 
         expect(rndstr).to be_a String

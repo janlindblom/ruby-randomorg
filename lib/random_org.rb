@@ -1,4 +1,5 @@
-require 'random_org/version'
+require 'version'
+require 'random_org/argument_error'
 require 'random_org/api_error'
 require 'random_org/api_server_error'
 require 'random_org/wrong_api_key_error'
@@ -14,6 +15,7 @@ require 'random_org/rng'
 # you the same methods with the same parameters and mimicing the behaviour of
 # the corresponding method in SecureRandom.
 module RandomOrg
+  is_versioned
   # Modify the current configuration.
   #
   # @example
