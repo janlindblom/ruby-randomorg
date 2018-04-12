@@ -51,14 +51,11 @@ module RandomOrg
     req = if maximum.zero?
             request_default
           else
-            # random.org treats the range as inclusive
+            # random.org treats the range as inclusive so set max=max-1
             request_with_min_max(min, maximum - 1)
           end
     response = RandomOrg::ApiClient.perform_request(req)
-    # TODO: take care of random failures on this line:
-    response['result']['random']['data'].first
-  rescue StandardError
-    raise ApiError, "Problem with the response: #{response}"
+    process_response(response)
   end
 
   # RandomOrg.hex generates a random hex string.
@@ -74,7 +71,7 @@ module RandomOrg
                                              size: size,
                                              format: 'hex')
     response = RandomOrg::ApiClient.perform_request(req)
-    response['result']['random']['data'].first
+    process_response(response)
   end
 
   # RandomOrg.base64 generates a random base64 string.
@@ -90,7 +87,7 @@ module RandomOrg
                                              size: size,
                                              format: 'base64')
     response = RandomOrg::ApiClient.perform_request(req)
-    response['result']['random']['data'].first
+    process_response(response)
   end
 
   # RandomOrg.urlsafe_base64 generates a random URL-safe base64 string.
@@ -142,6 +139,19 @@ module RandomOrg
                                          n: 1,
                                          'decimalPlaces' => 16,
                                          replacement: true)
+    end
+
+    def process_response(response)
+      bad_response_error(response) unless response.key? 'result'
+      result = response['result']
+      bad_response_error(response) unless result.key? 'random'
+      random = result['random']
+      bad_response_error(response) unless random.key? 'data'
+      random['data'].first
+    end
+
+    def bad_response_error(response)
+      raise ApiError, "Something is wrong with the response: #{response}"
     end
   end
 end
