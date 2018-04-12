@@ -1,7 +1,11 @@
-require "random_org/version"
-require "random_org/configuration"
-require "random_org/api_client"
-require "random_org/rng"
+require 'version'
+require 'random_org/argument_error'
+require 'random_org/api_error'
+require 'random_org/api_server_error'
+require 'random_org/wrong_api_key_error'
+require 'random_org/configuration'
+require 'random_org/api_client'
+require 'random_org/rng'
 
 # This library is an interface to the random.org random number generator API
 # which generates true random numbers through data gathered from atmospheric
@@ -11,7 +15,7 @@ require "random_org/rng"
 # you the same methods with the same parameters and mimicing the behaviour of
 # the corresponding method in SecureRandom.
 module RandomOrg
-
+  is_versioned
   # Modify the current configuration.
   #
   # @example
@@ -27,61 +31,65 @@ module RandomOrg
 
   # RandomOrg.random_bytes generates a random binary string.
   #
-  # @param [Numeric] n the length of the result string, if not specified, 16 is assumed
-  def self.random_bytes(n=nil)
-    [hex(n)].pack("H*")
+  # @param [Numeric] length the length of the result string, if not specified,
+  #   16 is assumed.
+  def self.random_bytes(length = 16)
+    [hex(length)].pack('H*')
   end
 
   # RandomOrg.random_number generates a random number.
   #
-  # If a positive integer is given as +n+,
+  # If a positive integer is given as +maximum+,
   # RandomOrg.random_number returns an integer:
-  #   0 <= RandomOrg.random_number(n) < n.
+  #   +0 <= RandomOrg.random_number(maximum) < maximum+.
   #
   # If 0 is given or an argument is not given,
   # RandomOrg.random_number returns a float:
-  #   0.0 <= RandomOrg.random_number() < 1.0.
+  #   +0.0 <= RandomOrg.random_number() < 1.0+.
   #
-  # @param [Numeric] n maximum if the value given is +> 0+
-  def self.random_number(n=0)
+  # @param [Numeric] maximum maximum if the value given is +> 0+
+  def self.random_number(maximum = 0)
     min = 0
-
-    if n == 0
-      max = 1
-      req = RandomOrg::ApiClient.build_request(:generate_decimal_fractions, {n: 1, "decimalPlaces" => 16, replacement: true})
-    else
-      max = n - 1 # random.org treats the range as inclusive
-      req = RandomOrg::ApiClient.build_request(:generate_integers, {n: 1, min: min, max: max, replacement: true, base: 10})
-    end
-
+    req = if maximum.zero?
+            request_default
+          else
+            # random.org treats the range as inclusive so set max=max-1
+            request_with_min_max(min, maximum - 1)
+          end
     response = RandomOrg::ApiClient.perform_request(req)
-    response["result"]["random"]["data"].first
+    process_response(response)
   end
 
   # RandomOrg.hex generates a random hex string.
   #
-  # The length of the result string is twice of +n+.
+  # The length of the result string is twice of +length+.
   #
-  # @param [Numeric] n the length of the random length, if not specified, 16 is assumed
-  def self.hex(n=nil)
-    n ||= 16
-    size = n * 8
-    req = RandomOrg::ApiClient.build_request(:generate_blobs, {n: 1, size: size, format: "hex"})
+  # @param [Numeric] length the length of the random string, if not specified,
+  #   16 is assumed.
+  def self.hex(length = 16)
+    size = length * 8
+    req = RandomOrg::ApiClient.build_request(:generate_blobs,
+                                             n: 1,
+                                             size: size,
+                                             format: 'hex')
     response = RandomOrg::ApiClient.perform_request(req)
-    response["result"]["random"]["data"].first
+    process_response(response)
   end
 
   # RandomOrg.base64 generates a random base64 string.
   #
-  # The length of the result string is about 4/3 of +n+.
+  # The length of the result string is about 4/3 of +length+.
   #
-  # @param [Numeric] n the length of the random length, if not specified, 16 is assumed
-  def self.base64(n=nil)
-    n ||= 16
-    size = n * 8
-    req = RandomOrg::ApiClient.build_request(:generate_blobs, {n: 1, size: size, format: "base64"})
+  # @param [Numeric] length the length of the random string, if not specified,
+  #   16 is assumed.
+  def self.base64(length = 16)
+    size = length * 8
+    req = RandomOrg::ApiClient.build_request(:generate_blobs,
+                                             n: 1,
+                                             size: size,
+                                             format: 'base64')
     response = RandomOrg::ApiClient.perform_request(req)
-    response["result"]["random"]["data"].first
+    process_response(response)
   end
 
   # RandomOrg.urlsafe_base64 generates a random URL-safe base64 string.
@@ -91,30 +99,61 @@ module RandomOrg
   # By default, padding is not generated because "=" may be used as a URL
   # delimiter.
   #
-  # @param [Numeric] n the length of the random length, if not specified, 16 is assumed
-  # @param [Boolean] padding specifies the padding: if false or nil, padding is not generated, otherwise padding is generated
-  def self.urlsafe_base64(n=nil, padding=false)
-    s = base64
-    s.tr!("+/", "-_")
-    s.delete!("=") if !padding
+  # @param [Numeric] length the length of the random length, if not specified,
+  #   16 is assumed.
+  # @param [Boolean] padding specifies the padding: if false or nil, padding is
+  #   not generated, otherwise padding is generated.
+  def self.urlsafe_base64(length = nil, padding = false)
+    s = base64 length
+    s.tr!('+/', '-_')
+    s.delete!('=') unless padding
     s
   end
 
   # RandomOrg.uuid generates a v4 random UUID (Universally Unique IDentifier).
   #
-  # The version 4 UUID is purely random (except the version). It doesn’t contain
-  # meaningful information such as MAC address, time, etc.
+  # The version 4 UUID is purely random (except the version). It doesn't
+  #   contain meaningful information such as MAC address, time, etc.
   #
   # See RFC 4122 for details of UUID.
   def self.uuid
-    req = RandomOrg::ApiClient.build_request(:generate_uuids, {n: 1})
+    req = RandomOrg::ApiClient.build_request(:generate_uuids, n: 1)
     response = RandomOrg::ApiClient.perform_request(req)
-    response["result"]["random"]["data"].first
+    response['result']['random']['data'].first
   end
 
   class << self
     attr_accessor :configuration
+
+    private
+
+    def request_with_min_max(min, max)
+      RandomOrg::ApiClient.build_request(:generate_integers,
+                                         n: 1,
+                                         min: min,
+                                         max: max,
+                                         replacement: true,
+                                         base: 10)
+    end
+
+    def request_default
+      RandomOrg::ApiClient.build_request(:generate_decimal_fractions,
+                                         n: 1,
+                                         'decimalPlaces' => 16,
+                                         replacement: true)
+    end
+
+    def process_response(response)
+      bad_response_error(response) unless response.key? 'result'
+      result = response['result']
+      bad_response_error(response) unless result.key? 'random'
+      random = result['random']
+      bad_response_error(response) unless random.key? 'data'
+      random['data'].first
+    end
+
+    def bad_response_error(response)
+      raise ApiError, "Something is wrong with the response: #{response}"
+    end
   end
-
-
 end

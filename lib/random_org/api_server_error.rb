@@ -1,6 +1,5 @@
 module RandomOrg
   # Raised when the API service endpoint is experiencing problems.
-  class ApiServerException < StandardError
-
+  class ApiServerError < StandardError
   end
 end
