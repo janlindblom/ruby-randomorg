@@ -10,7 +10,7 @@ require "yard/rake/yardoc_task"
 require 'random_org'
 
 s = Gem::Specification.new do |spec|
-  spec.name          = 'ruby-randomorg'
+  spec.name          = 'randomorg'
   spec.version       = RandomOrg::VERSION
   spec.authors       = ['Jan Lindblom']
   spec.email         = ['janlindblom@fastmail.fm']
