@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: randomorg 0.1.1 ruby lib
+# stub: randomorg 0.1.2a ruby lib
 
 Gem::Specification.new do |s|
   s.name = "randomorg".freeze
-  s.version = "0.1.1"
+  s.version = "0.1.2a"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
