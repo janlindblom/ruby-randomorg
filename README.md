@@ -1,6 +1,9 @@
 # RandomOrg
 
+![AWS CodeBuild](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiU0NCZDhUK0ZrUXRKRlNHRkJHREFJZG51KzNKSjNtZ1pqKzNCWnhpV0MyOEdDNHNRTnk1cHNLK0tKeFNGZFdlODFyWldFclNmajZodTRsTTErdVpRdjFrPSIsIml2UGFyYW1ldGVyU3BlYyI6ImNDR3RJT0hWdXlsdjdCdloiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/janlindblom/ruby-randomorg.png)](https://bitbucket.org/janlindblom/ruby-randomorg)
+[![Gem](https://img.shields.io/gem/v/randomorg.png)](https://rubygems.org/gems/randomorg)
+[![Documentation](https://img.shields.io/badge/docs-rdoc.info-blue.png)](http://www.rubydoc.info/gems/randomorg/frames)
 
 Access true random numbers through the random.org API!
 
