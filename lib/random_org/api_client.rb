@@ -44,7 +44,7 @@ module RandomOrg
       end
     end
 
-    @endpoint_uri = "https://api.random.org/json-rpc/1/invoke"
+    @endpoint_uri = "https://api.random.org/json-rpc/2/invoke"
 
     private
 
