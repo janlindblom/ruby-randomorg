@@ -24,7 +24,7 @@ module RandomOrg
     # @param [Hash] req prebuilt request to perform
     # @return [Hash] parsed response
     def self.perform_request(req)
-      response = RestClient.post(@endpoint_uri, req.to_json)
+      response = RestClient.post(@endpoint_uri, req.to_json, {content_type: 'application/json'})
       case response.code
       when 200
         return JSON.parse(response.body)

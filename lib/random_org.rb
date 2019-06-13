@@ -139,7 +139,7 @@ module RandomOrg
     def request_default
       RandomOrg::ApiClient.build_request(:generate_decimal_fractions,
                                          n: 1,
-                                         'decimalPlaces' => 16,
+                                         'decimalPlaces' => 14,
                                          replacement: true)
     end
 
