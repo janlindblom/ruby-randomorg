@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RandomOrg
   # Holds configuration of the module required for it to work.
   class Configuration
