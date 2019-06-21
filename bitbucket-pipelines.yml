@@ -9,6 +9,8 @@ pipelines:
           - bundle install --path=./vendor
           - bundle exec rake build
           - bundle exec rake spec
+          - bundle exec rake yard
+          - bundle exec rake rubocop
 
 definitions:
   caches:
