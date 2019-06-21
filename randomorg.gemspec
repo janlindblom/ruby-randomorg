@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<bundler>.freeze, ["~> 2"])
+      s.add_development_dependency(%q<bundler>.freeze, ["> 1.14"])
       s.add_development_dependency(%q<dotenv>.freeze, ["~> 2"])
       s.add_development_dependency(%q<pry>.freeze, ["~> 0.12"])
       s.add_development_dependency(%q<rake>.freeze, ["~> 12"])
@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<rest-client>.freeze, ["~> 2"])
       s.add_runtime_dependency(%q<version>.freeze, ["~> 1"])
     else
-      s.add_dependency(%q<bundler>.freeze, ["~> 2"])
+      s.add_dependency(%q<bundler>.freeze, ["> 1.14"])
       s.add_dependency(%q<dotenv>.freeze, ["~> 2"])
       s.add_dependency(%q<pry>.freeze, ["~> 0.12"])
       s.add_dependency(%q<rake>.freeze, ["~> 12"])
@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<version>.freeze, ["~> 1"])
     end
   else
-    s.add_dependency(%q<bundler>.freeze, ["~> 2"])
+    s.add_dependency(%q<bundler>.freeze, ["> 1.14"])
     s.add_dependency(%q<dotenv>.freeze, ["~> 2"])
     s.add_dependency(%q<pry>.freeze, ["~> 0.12"])
     s.add_dependency(%q<rake>.freeze, ["~> 12"])

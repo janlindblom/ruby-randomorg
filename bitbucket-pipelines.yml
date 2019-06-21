@@ -21,6 +21,7 @@ pipelines:
           caches:
             - bundler
           script:
+            - gem install bundler -v 2.0.2
             - bundle install --path=./vendor
             - bundle exec rake build
             - bundle exec rake spec
