@@ -36,7 +36,7 @@ pipelines:
             - bundle exec rake spec
     release/*:
       - step:
-          name: Test feature
+          name: Test upcoming release
           deployment: staging
           caches:
             - bundler
