@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'random_org/wrong_api_key_error'
 require 'random_org/api_server_error'
 require 'rest-client'
@@ -24,19 +26,18 @@ module RandomOrg
     # @param [Hash] req prebuilt request to perform
     # @return [Hash] parsed response
     def self.perform_request(req)
-      response = RestClient.post(@endpoint_uri, req.to_json, {content_type: 'application/json'})
+      response = RestClient.post(@endpoint_uri, req.to_json,
+                                 content_type: 'application/json')
       case response.code
-      when 200
-        return JSON.parse(response.body)
       when 400
         wrong_api_key_error
       when 500
         api_server_error
       end
-      nil
+      response.code == 200 ? JSON.parse(response.body) : nil
     end
 
-    @endpoint_uri = "https://api.random.org/json-rpc/2/invoke"
+    @endpoint_uri = 'https://api.random.org/json-rpc/2/invoke'
 
     private_class_method def self.base_request
       {

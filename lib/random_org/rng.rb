@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'random_org/api_client'
 
 module RandomOrg

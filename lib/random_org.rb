@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'version'
 require 'random_org/argument_error'
 require 'random_org/api_error'
