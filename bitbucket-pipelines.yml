@@ -3,14 +3,19 @@ image: ruby:2.4.0
 pipelines:
   default:
     - step:
+        name: Setup
+        caches:
+          - bundler
+        script:
+          - gem install bundler
+    - step:
+        name: Build and test
         caches:
           - bundler
         script:
           - bundle install --path=./vendor
           - bundle exec rake build
           - bundle exec rake spec
-          - bundle exec rake yard
-          - bundle exec rake rubocop
 
 definitions:
   caches:
