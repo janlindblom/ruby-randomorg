@@ -17,7 +17,7 @@ pipelines:
     develop:
       - step:
           name: Test development
-          deployment: test-dev
+          deployment: test
           caches:
             - bundler
           script:
@@ -27,7 +27,6 @@ pipelines:
     feature/*:
       - step:
           name: Test feature
-          deployment: test-feature
           caches:
             - bundler
           script:
