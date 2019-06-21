@@ -1,6 +1,49 @@
 image: ruby:2.6
 
 pipelines:
+  branches:
+    master:
+      - step:
+          name: Test stable
+          deployment: production
+          caches:
+            - bundler
+          script:
+            - bundle install --path=./vendor
+            - bundle exec rake build
+            - bundle exec rake spec
+            - bundle exec rake yard
+            - bundle exec rake rubocop
+    develop:
+      - step:
+          name: Test development
+          deployment: test-dev
+          caches:
+            - bundler
+          script:
+            - bundle install --path=./vendor
+            - bundle exec rake build
+            - bundle exec rake spec
+    feature/*:
+      - step:
+          name: Test feature
+          deployment: test-feature
+          caches:
+            - bundler
+          script:
+            - bundle install --path=./vendor
+            - bundle exec rake build
+            - bundle exec rake spec
+    release/*:
+      - step:
+          name: Test feature
+          deployment: staging
+          caches:
+            - bundler
+          script:
+            - bundle install --path=./vendor
+            - bundle exec rake build
+            - bundle exec rake spec
   default:
     - step:
         name: Build and test
@@ -10,12 +53,6 @@ pipelines:
           - bundle install --path=./vendor
           - bundle exec rake build
           - bundle exec rake spec
-    - step:
-        name: Verification
-        caches:
-          - bundler
-        script:
-          - bundle install --path=./vendor
           - bundle exec rake yard
           - bundle exec rake rubocop
 
