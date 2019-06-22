@@ -50,6 +50,8 @@ module RandomOrg
       case which_request
       when :generate_integers
         'generateIntegers'
+      when :generate_integer_sequences
+        'generateIntegerSequences'
       when :generate_decimal_fractions
         'generateDecimalFractions'
       when :generate_blobs
@@ -57,6 +59,19 @@ module RandomOrg
       when :generate_uuids
         'generateUUIDs'
       end
+    end
+
+    def self.process_response(response)
+      bad_response_error(response) unless response.key? 'result'
+      result = response['result']
+      bad_response_error(response) unless result.key? 'random'
+      random = result['random']
+      bad_response_error(response) unless random.key? 'data'
+      random['data'].first
+    end
+
+    def self.bad_response_error(response)
+      raise ApiError, "Something is wrong with the response: #{response}"
     end
 
     private_class_method def self.api_server_error

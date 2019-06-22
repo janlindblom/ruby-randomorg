@@ -7,6 +7,7 @@ require 'random_org/api_server_error'
 require 'random_org/wrong_api_key_error'
 require 'random_org/configuration'
 require 'random_org/api_client'
+require 'random_org/basic'
 require 'random_org/rng'
 
 # This library is an interface to the random.org random number generator API
@@ -59,7 +60,7 @@ module RandomOrg
             request_with_min_max(min, maximum - 1)
           end
     response = RandomOrg::ApiClient.perform_request(req)
-    process_response(response)
+    RandomOrg::ApiClient.process_response(response)
   end
 
   # RandomOrg.hex generates a random hex string.
@@ -75,7 +76,7 @@ module RandomOrg
                                              size: size,
                                              format: 'hex')
     response = RandomOrg::ApiClient.perform_request(req)
-    process_response(response)
+    RandomOrg::ApiClient.process_response(response)
   end
 
   # RandomOrg.base64 generates a random base64 string.
@@ -91,7 +92,7 @@ module RandomOrg
                                              size: size,
                                              format: 'base64')
     response = RandomOrg::ApiClient.perform_request(req)
-    process_response(response)
+    RandomOrg::ApiClient.process_response(response)
   end
 
   # RandomOrg.urlsafe_base64 generates a random URL-safe base64 string.
