@@ -71,7 +71,7 @@ module RandomOrg
   #   16 is assumed.
   def self.hex(length = 16)
     size = length * 8
-    req = RandomOrg::ApiClient.build_request(:generate_blobs,
+    req = RandomOrg::ApiClient.build_request('generateBlobs',
                                              n: 1,
                                              size: size,
                                              format: 'hex')
@@ -87,7 +87,7 @@ module RandomOrg
   #   16 is assumed.
   def self.base64(length = 16)
     size = length * 8
-    req = RandomOrg::ApiClient.build_request(:generate_blobs,
+    req = RandomOrg::ApiClient.build_request('generateBlobs',
                                              n: 1,
                                              size: size,
                                              format: 'base64')
@@ -120,7 +120,7 @@ module RandomOrg
   #
   # See RFC 4122 for details of UUID.
   def self.uuid
-    req = RandomOrg::ApiClient.build_request(:generate_uuids, n: 1)
+    req = RandomOrg::ApiClient.build_request('generateUUIDs', n: 1)
     response = RandomOrg::ApiClient.perform_request(req)
     response['result']['random']['data'].first
   end
@@ -131,7 +131,7 @@ module RandomOrg
     private
 
     def request_with_min_max(min, max)
-      RandomOrg::ApiClient.build_request(:generate_integers,
+      RandomOrg::ApiClient.build_request('generateIntegers',
                                          n: 1,
                                          min: min,
                                          max: max,
@@ -140,7 +140,7 @@ module RandomOrg
     end
 
     def request_default
-      RandomOrg::ApiClient.build_request(:generate_decimal_fractions,
+      RandomOrg::ApiClient.build_request('generateDecimalFractions',
                                          n: 1,
                                          'decimalPlaces' => 14,
                                          replacement: true)
