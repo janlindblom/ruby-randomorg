@@ -26,7 +26,10 @@ s = Gem::Specification.new do |spec|
     f.match(%r{^(bin|test|spec|features)/}) ||
       f == '.travis.yml' ||
       f == 'buildspec.yml' ||
-      f == 'bitbucket-pipelines.yml'
+      f == 'bitbucket-pipelines.yml' ||
+      f == '.rubocop.yml' ||
+      f == '.rubocop_todo.yml' ||
+      f == '.editorconfig'
   }
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
