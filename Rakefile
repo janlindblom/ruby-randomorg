@@ -45,6 +45,7 @@ s = Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.16'
   spec.add_development_dependency 'simplecov-rcov', '~> 0.2'
   spec.add_development_dependency 'yard', '~> 0.9'
+  spec.add_development_dependency 'solargraph', '~> 0.37'
   spec.add_runtime_dependency 'rest-client', '~> 2'
   spec.add_runtime_dependency 'version', '~> 1'
 end

@@ -2,6 +2,7 @@
 
 require 'random_org/api_client'
 require 'random_org/argument_error'
+require 'random_org/response/usage'
 
 module RandomOrg
   # Methods for accessing the "Basic" API.
@@ -47,6 +48,28 @@ module RandomOrg
                                                  params)
         response = RandomOrg::ApiClient.perform_request(req)
         RandomOrg::ApiClient.process_response(response)
+      end
+
+      def generate_gaussians
+        # TODO
+      end
+
+      def generate_strings
+        # TODO
+      end
+
+      def generate_uuids
+        # TODO
+      end
+
+      def generate_blobs
+        # TODO
+      end
+
+      def get_usage
+        req = RandomOrg::ApiClient.build_request('getUsage', {})
+        response = RandomOrg::ApiClient.perform_request(req)
+        RandomOrg::Response::Usage.new RandomOrg::ApiClient.process_response(response, false)
       end
 
       private
