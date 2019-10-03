@@ -8,14 +8,29 @@ module RandomOrg
   # Methods for accessing the "Basic" API.
   class Basic
     class << self
-      # RandomOrg.generate_integers generates random integers within a
-      # user-defined range.
+      # Generates random integers within a user-defined range.
       #
-      # @param [Hash] params parameters
-      def generate_integers(params = nil)
-        verify_arguments(params)
+      # @param [Hash] opts parameters
+      # @option opts [Integer] :n how many random integers you need. Must be
+      #   within the [1,1e4] range.
+      # @option opts [Integer] :min the lower boundary for the range from which
+      #   the random numbers will be picked. Must be within the [-1e9,1e9]
+      #   range.
+      # @option opts [Integer] :max the upper boundary for the range from which
+      #   the random numbers will be picked. Must be within the [-1e9,1e9]
+      #   range.
+      # @option opts [Boolean] :replacement (true) specifies whether the random
+      #   numbers should be picked with replacement. The default will cause the
+      #   numbers to be picked with replacement, i.e., the resulting numbers
+      #   may contain duplicate values (like a series of dice rolls). If you
+      #   want the numbers picked to be unique (like raffle tickets drawn from
+      #   a container), set this value to +false+.
+      # @option opts [Integer] :base (10) specifies the base that will be used
+      #   to display the numbers. Values allowed are +2+, +8+, +10+ and +16+.
+      def generate_integers(opts = nil)
+        verify_arguments(opts, %i[n min max])
 
-        req = RandomOrg::ApiClient.build_request('generateIntegers', params)
+        req = RandomOrg::ApiClient.build_request('generateIntegers', opts)
         response = RandomOrg::ApiClient.perform_request(req)
         RandomOrg::ApiClient.process_response(response)
       end
@@ -102,9 +117,14 @@ module RandomOrg
         raise error if num < min || num > max
       end
 
-      def verify_arguments(params)
+      def verify_arguments(params, required_keys = [])
         error = RandomOrg::ArgumentError, 'Missing required arguments.'
         raise error if params.nil?
+
+        error = RandomOrg::ArgumentError, 'Missing required parameters.'
+        required_keys.each do |key|
+          raise error unless params.key? key
+        end
       end
 
       def verify_min_max(params, allowed_min, allowed_max)

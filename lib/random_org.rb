@@ -17,6 +17,8 @@ require 'random_org/rng'
 # This library is implemented as a drop-in replacement for SecureRandom, giving
 # you the same methods with the same parameters and mimicing the behaviour of
 # the corresponding method in SecureRandom.
+#
+# @author Jan Lindblom <janlindblom@fastmail.fm>
 module RandomOrg
   is_versioned
   # Modify the current configuration.

@@ -52,6 +52,7 @@ module RandomOrg
       bad_response_error(response) unless response.key? 'result'
       result = response['result']
       return result unless expect_random_data
+
       bad_response_error(response) unless result.key? 'random'
       random = result['random']
       bad_response_error(response) unless random.key? 'data'
