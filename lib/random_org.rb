@@ -7,6 +7,7 @@ require 'random_org/api_server_error'
 require 'random_org/wrong_api_key_error'
 require 'random_org/configuration'
 require 'random_org/api_client'
+require 'random_org/response'
 require 'random_org/basic'
 require 'random_org/rng'
 
@@ -14,7 +15,7 @@ require 'random_org/rng'
 # which generates true random numbers through data gathered from atmospheric
 # noise.
 #
-# This library is implemented as a drop-in replacement for SecureRandom, giving
+# This library can be used as a drop-in replacement for SecureRandom, giving
 # you the same methods with the same parameters and mimicing the behaviour of
 # the corresponding method in SecureRandom.
 #

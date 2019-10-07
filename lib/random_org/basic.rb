@@ -14,10 +14,10 @@ module RandomOrg
       # @option opts [Integer] :n how many random integers you need. Must be
       #   within the [1,1e4] range.
       # @option opts [Integer] :min the lower boundary for the range from which
-      #   the random numbers will be picked. Must be within the [-1e9,1e9]
+      #   the random numbers will be picked. Must be within the +[-1e9,1e9]+
       #   range.
       # @option opts [Integer] :max the upper boundary for the range from which
-      #   the random numbers will be picked. Must be within the [-1e9,1e9]
+      #   the random numbers will be picked. Must be within the +[-1e9,1e9]+
       #   range.
       # @option opts [Boolean] :replacement (true) specifies whether the random
       #   numbers should be picked with replacement. The default will cause the
@@ -81,10 +81,11 @@ module RandomOrg
         # TODO
       end
 
-      def get_usage
+      def usage
         req = RandomOrg::ApiClient.build_request('getUsage', {})
         response = RandomOrg::ApiClient.perform_request(req)
-        RandomOrg::Response::Usage.new RandomOrg::ApiClient.process_response(response, false)
+        processed = RandomOrg::ApiClient.process_response(response, false)
+        RandomOrg::Response::Usage.new processed
       end
 
       private
