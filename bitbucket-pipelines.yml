@@ -9,7 +9,6 @@ pipelines:
           caches:
             - bundler
           script:
-            - gem install bundler -v 2.0
             - bundle install --path=./vendor
             - bundle exec rake build
             - bundle exec rake spec
@@ -22,7 +21,6 @@ pipelines:
           caches:
             - bundler
           script:
-            - gem install bundler -v 2.0
             - bundle install --path=./vendor
             - bundle exec rake build
             - bundle exec rake spec
@@ -33,7 +31,6 @@ pipelines:
           caches:
             - bundler
           script:
-            - gem install bundler -v 2.0
             - bundle install --path=./vendor
             - bundle exec rake build
             - bundle exec rake spec
@@ -44,17 +41,17 @@ pipelines:
           caches:
             - bundler
           script:
-            - gem install bundler -v 2.0
             - bundle install --path=./vendor
             - bundle exec rake build
             - bundle exec rake spec
+            - bundle exec rake yard
+            - bundle exec rake rubocop
   default:
     - step:
         name: Build and test
         caches:
           - bundler
         script:
-          - gem install bundler -v 2.0
           - bundle install --path=./vendor
           - bundle exec rake build
           - bundle exec rake spec

@@ -40,6 +40,8 @@ module RandomOrg
       private
 
       def create_from_hash(args)
+
+        args.each {|k,v| public_send("#{k}=",v)}
         @status = args['status'] if args.key? 'status'
         @creation_time = DateTime.parse(args['creationTime']) if args.key? 'creationTime'
         @bits_left = args['bitsLeft'] if args.key? 'bitsLeft'
