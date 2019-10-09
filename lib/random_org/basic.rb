@@ -32,22 +32,24 @@ module RandomOrg
 
         req = RandomOrg::ApiClient.build_request('generateIntegers', opts)
         response = RandomOrg::ApiClient.perform_request(req)
-        RandomOrg::ApiClient.process_response(response)
+        processed = RandomOrg::ApiClient.process_response(response)
+        RandomOrg::Response::Integers.new processed
       end
 
       # RandomOrg.generate_integer_sequences generates uniform or multiform
       # sequences of random integers within user-defined ranges.
       #
       # @param [Hash] params parameters
-      def generate_integer_sequences(params = nil)
-        verify_arguments(params)
+      def generate_integer_sequences(opts = nil)
+        verify_arguments(opts, %i[n length min max])
 
-        verify_min_max(params, -1_000_000_000, 1_000_000_000)
+        verify_min_max(opts, -1_000_000_000, 1_000_000_000)
 
         req = RandomOrg::ApiClient.build_request('generateIntegerSequences',
-                                                 params)
+          opts)
         response = RandomOrg::ApiClient.perform_request(req)
-        RandomOrg::ApiClient.process_response(response)
+        processed = RandomOrg::ApiClient.process_response(response)
+        RandomOrg::Response::IntegerSequences.new processed
       end
 
       # RandomOrg.generate_decimal_fractions generates random decimal fractions
@@ -119,12 +121,10 @@ module RandomOrg
       end
 
       def verify_arguments(params, required_keys = [])
-        error = RandomOrg::ArgumentError, 'Missing required arguments.'
-        raise error if params.nil?
+        raise RandomOrg::ArgumentError, 'Missing required arguments.' if params.nil?
 
-        error = RandomOrg::ArgumentError, 'Missing required parameters.'
         required_keys.each do |key|
-          raise error unless params.key? key
+          raise RandomOrg::ArgumentError, 'Missing required parameters.' unless params.key? key
         end
       end
 
