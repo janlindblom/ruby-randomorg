@@ -47,23 +47,22 @@ module RandomOrg
   #
   # If a positive integer is given as +maximum+,
   # RandomOrg.random_number returns an integer:
-  #   +0 <= RandomOrg.random_number(maximum) < maximum+.
+  #   0 <= RandomOrg.random_number(maximum) < maximum
   #
   # If 0 is given or an argument is not given,
   # RandomOrg.random_number returns a float:
-  #   +0.0 <= RandomOrg.random_number() < 1.0+.
+  #   0.0 <= RandomOrg.random_number() < 1.0
   #
   # @param [Numeric] maximum maximum if the value given is +> 0+
   def self.random_number(maximum = 0)
     min = 0
-    req = if maximum.zero?
-            request_default
-          else
-            # random.org treats the range as inclusive so set max=max-1
-            request_with_min_max(min, maximum - 1)
-          end
-    response = RandomOrg::ApiClient.perform_request(req)
-    RandomOrg::ApiClient.process_response(response)
+    if maximum.zero?
+      response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: min, decimal_places: 14)
+    else
+      response = RandomOrg::Basic.generate_integers(n: 1, min: min, max: maximum)
+    end
+
+    response.data.first
   end
 
   # RandomOrg.hex generates a random hex string.
@@ -79,7 +78,8 @@ module RandomOrg
                                              size: size,
                                              format: 'hex')
     response = RandomOrg::ApiClient.perform_request(req)
-    RandomOrg::ApiClient.process_response(response)
+    processed = RandomOrg::ApiClient.process_response(response)
+    processed['data'].first
   end
 
   # RandomOrg.base64 generates a random base64 string.
@@ -95,7 +95,8 @@ module RandomOrg
                                              size: size,
                                              format: 'base64')
     response = RandomOrg::ApiClient.perform_request(req)
-    RandomOrg::ApiClient.process_response(response)
+    processed = RandomOrg::ApiClient.process_response(response)
+    processed['data'].first
   end
 
   # RandomOrg.urlsafe_base64 generates a random URL-safe base64 string.

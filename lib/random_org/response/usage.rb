@@ -26,7 +26,7 @@ module RandomOrg
     #     this API key since it was created.
     class Usage
       attr_accessor :status
-      attr_accessor :creation_time
+      attr_reader :creation_time
       attr_accessor :bits_left
       attr_accessor :requests_left
       attr_accessor :total_bits
@@ -34,15 +34,15 @@ module RandomOrg
 
       # Initialize a new Usage object.
       def initialize(args = {})
-        Response.convert_hash_keys(args).each {|k,v| public_send("#{k}=",v)}
+        Response.convert_hash_keys(args).each { |k, v| public_send("#{k}=", v) }
       end
 
       def creation_time=(creation_time)
-        if creation_time.is_a? String
-          @creation_time = DateTime.parse creation_time
-        else
-          @creation_time = creation_time
-        end
+        @creation_time = if creation_time.is_a? String
+                           DateTime.parse creation_time
+                         else
+                           creation_time
+                         end
       end
     end
   end

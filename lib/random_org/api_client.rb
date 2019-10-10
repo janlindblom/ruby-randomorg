@@ -56,7 +56,7 @@ module RandomOrg
       bad_response_error(response) unless result.key? 'random'
       random = result['random']
       bad_response_error(response) unless random.key? 'data'
-      #random['data'].first
+      # random['data'].first
       random
     end
 

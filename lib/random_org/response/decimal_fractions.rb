@@ -2,11 +2,11 @@
 
 module RandomOrg
   module Response
-    # Integers response from Random.org API.
+    # Decimal fractions response from Random.org API.
     #
     # @version 0.2.2
     # @author Jan Lindblom <janlindblom@fastmail.fm>
-    class IntegerSequences < RandomData
+    class DecimalFractions < RandomData
     end
   end
 end

@@ -27,6 +27,7 @@ module RandomOrg
       #   a container), set this value to +false+.
       # @option opts [Integer] :base (10) specifies the base that will be used
       #   to display the numbers. Values allowed are +2+, +8+, +10+ and +16+.
+      # @return [RandomOrg::Response::Integers] an Integers response object.
       def generate_integers(opts = nil)
         verify_arguments(opts, %i[n min max])
 
@@ -36,35 +37,67 @@ module RandomOrg
         RandomOrg::Response::Integers.new processed
       end
 
-      # RandomOrg.generate_integer_sequences generates uniform or multiform
-      # sequences of random integers within user-defined ranges.
+      # Generates uniform or multiform sequences of random integers within
+      # user-defined ranges.
       #
-      # @param [Hash] params parameters
+      # @param [Hash] opts parameters
+      # @option opts [Integer] :n how many random integers you need. Must be
+      #   within the [1,1e4] range.
+      # @option opts [Integer] :min the lower boundary for the range from which
+      #   the random numbers will be picked. Must be within the +[-1e9,1e9]+
+      #   range.
+      # @option opts [Integer] :max the upper boundary for the range from which
+      #   the random numbers will be picked. Must be within the +[-1e9,1e9]+
+      #   range.
+      # @option opts [Integer] :length This parameter specifies the lengths of
+      #   the sequences requested. For uniform sequences, length must be an
+      #   integer in the +[1,10000]+ range.
+      # @option opts [Boolean] :replacement (true) specifies whether the random
+      #   numbers should be picked with replacement. The default will cause the
+      #   numbers to be picked with replacement, i.e., the resulting numbers
+      #   may contain duplicate values (like a series of dice rolls). If you
+      #   want the numbers picked to be unique (like raffle tickets drawn from
+      #   a container), set this value to +false+.
+      # @option opts [Integer] :base (10) specifies the base that will be used
+      #   to display the numbers. Values allowed are +2+, +8+, +10+ and +16+.
+      # @return [RandomOrg::Response::IntegerSequences]
       def generate_integer_sequences(opts = nil)
         verify_arguments(opts, %i[n length min max])
 
         verify_min_max(opts, -1_000_000_000, 1_000_000_000)
 
         req = RandomOrg::ApiClient.build_request('generateIntegerSequences',
-          opts)
+                                                 opts)
         response = RandomOrg::ApiClient.perform_request(req)
         processed = RandomOrg::ApiClient.process_response(response)
         RandomOrg::Response::IntegerSequences.new processed
       end
 
-      # RandomOrg.generate_decimal_fractions generates random decimal fractions
-      # from a uniform distribution across the [0,1] interval with a
-      # user-defined number of decimal places.
+      # Generates random decimal fractions from a uniform distribution across
+      # the [0,1] interval with a user-defined number of decimal places.
       #
-      # @param [Hash] params parameters
-      def generate_decimal_fractions(params = nil)
-        verify_arguments(params)
-        verify_n(params, 1, 10_000)
-        verify_decimal_places(params, 1, 14)
+      # @param [Hash] opts parameters
+      # @option opts [Integer] :n how many random decimal fractions you need.
+      #   Must be within the +[1,10000]+ range.
+      # @option opts [Integer] decimalPlaces the number of decimal places to
+      #   use. Must be within the +[1,14]+ range.
+      # @option opts [Boolean] :replacement (true) specifies whether the random
+      #   numbers should be picked with replacement. The default will cause the
+      #   numbers to be picked with replacement, i.e., the resulting numbers
+      #   may contain duplicate values (like a series of dice rolls). If you
+      #   want the numbers picked to be unique (like raffle tickets drawn from
+      #   a container), set this value to +false+.
+      # @return [RandomOrg::Response::DecimalFractions]
+      def generate_decimal_fractions(opts = nil)
+        verify_arguments(opts, %i[n decimal_places])
+        opts = {n: opts[:n], 'decimalPlaces' => opts[:decimal_places]}
+        verify_n(opts, 1, 10_000)
+        verify_decimal_places(opts, 1, 14)
         req = RandomOrg::ApiClient.build_request('generateDecimalFractions',
-                                                 params)
+                                                 opts)
         response = RandomOrg::ApiClient.perform_request(req)
-        RandomOrg::ApiClient.process_response(response)
+        processed = RandomOrg::ApiClient.process_response(response)
+        RandomOrg::Response::DecimalFractions.new processed
       end
 
       def generate_gaussians
@@ -93,31 +126,27 @@ module RandomOrg
       private
 
       def verify_decimal_places(params, min, max)
-        message = "Hash must include parameter 'decimalPlaces'."
-        error = RandomOrg::ArgumentError, message
-        raise error unless params.key? 'decimalPlaces'
+        #message = "Hash must include parameter 'decimalPlaces'."
+        #raise RandomOrg::ArgumentError, message unless params.key? 'decimalPlaces'
 
         message = "Parameter 'decimalPlaces' must be in the " \
                   "[#{min}, #{max}] range."
-        error = RandomOrg::ArgumentError, message
         num = params['decimalPlaces']
-        raise error if num < min || num > max
+        raise RandomOrg::ArgumentError, message if num < min || num > max
       end
 
       def verify_n(params, min, max)
         message = "params must include parameter 'n'."
-        raise RandomOrg::ArgumentError, message unless params.key? 'n'
+        raise RandomOrg::ArgumentError, message unless params.key?('n') || params.key?(:n)
 
         num = params[:n]
         message = "n must be in the [#{min}, #{max}] range."
-        error = RandomOrg::ArgumentError, message
-        raise error if num < min || num > max
+        raise RandomOrg::ArgumentError, message if num < min || num > max
       end
 
       def verify_range(key, num, min, max)
         message = "#{key} values must be in the [#{min}, #{max}] range."
-        error = RandomOrg::ArgumentError, message
-        raise error if num < min || num > max
+        raise RandomOrg::ArgumentError, message if num < min || num > max
       end
 
       def verify_arguments(params, required_keys = [])
