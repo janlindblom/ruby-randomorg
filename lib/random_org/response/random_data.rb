@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'random_org/response/data'
+
 module RandomOrg
   module Response
     # Generic random data response from Random.org API.
@@ -10,12 +12,12 @@ module RandomOrg
     #   @return [Array] an array containing the sequence of numbers requested.
     # @!attribute [rw] completion_time
     #   @return [DateTime] the timestamp at which the request was completed.
-    class RandomData
+    class RandomData < Data
       attr_accessor :data
       attr_reader :completion_time
 
       def initialize(args = {})
-        Response.convert_hash_keys(args).each { |k, v| public_send("#{k}=", v) }
+        convert_hash_keys(args).each { |k, v| public_send("#{k}=", v) }
       end
 
       def completion_time=(completion_time)

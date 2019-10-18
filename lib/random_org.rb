@@ -57,9 +57,11 @@ module RandomOrg
   def self.random_number(maximum = 0)
     min = 0
     if maximum.zero?
-      response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: min, decimal_places: 14)
+      response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: min,
+                                                             decimal_places: 14)
     else
-      response = RandomOrg::Basic.generate_integers(n: 1, min: min, max: maximum)
+      response = RandomOrg::Basic.generate_integers(n: 1, min: min,
+                                                    max: maximum)
     end
 
     response.data.first

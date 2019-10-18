@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'random_org/response/data'
+
 module RandomOrg
   module Response
     # Usage response from Random.org API.
@@ -24,7 +26,7 @@ module RandomOrg
     # @!attribute [rw] total_requests
     #   @return [Integer] an integer containing the number of requests used by
     #     this API key since it was created.
-    class Usage
+    class Usage < Data
       attr_accessor :status
       attr_reader :creation_time
       attr_accessor :bits_left
@@ -34,7 +36,7 @@ module RandomOrg
 
       # Initialize a new Usage object.
       def initialize(args = {})
-        Response.convert_hash_keys(args).each { |k, v| public_send("#{k}=", v) }
+        convert_hash_keys(args).each { |k, v| public_send("#{k}=", v) }
       end
 
       def creation_time=(creation_time)
