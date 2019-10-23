@@ -60,15 +60,13 @@ module RandomOrg
   # @return [Integer, Float] a random number in the range +[0,1.0]+ or
   #   +[0,maximum]+.
   def self.random_number(maximum = 0)
-    min = 0
     if maximum.zero?
-      response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: min,
+      response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: 0,
                                                              decimal_places: 14)
     elsif maximum.is_a? Integer
-      response = RandomOrg::Basic.generate_integers(n: 1, min: min,
+      response = RandomOrg::Basic.generate_integers(n: 1, min: 0,
                                                     max: maximum)
     end
-
     response.data.first
   end
 
@@ -146,32 +144,13 @@ module RandomOrg
     private
 
     def request_with_min_max(min, max)
-      RandomOrg::ApiClient.build_request('generateIntegers',
-                                         n: 1,
-                                         min: min,
-                                         max: max,
-                                         replacement: true,
-                                         base: 10)
+      RandomOrg::Basic.generate_integers(n: 1, min: min, max: max,
+                                         replacement: true, base: 10)
     end
 
     def request_default
-      RandomOrg::ApiClient.build_request('generateDecimalFractions',
-                                         n: 1,
-                                         'decimalPlaces' => 14,
-                                         replacement: true)
-    end
-
-    def process_response(response)
-      bad_response_error(response) unless response.key? 'result'
-      result = response['result']
-      bad_response_error(response) unless result.key? 'random'
-      random = result['random']
-      bad_response_error(response) unless random.key? 'data'
-      random['data'].first
-    end
-
-    def bad_response_error(response)
-      raise ApiError, "Something is wrong with the response: #{response}"
+      RandomOrg::Basic.generate_decimal_fractions(n: 1, decimal_places: 14,
+                                                  replacement: true)
     end
   end
 end
