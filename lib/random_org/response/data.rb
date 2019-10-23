@@ -8,6 +8,7 @@ module RandomOrg
     # @author Jan Lindblom <janlindblom@fastmail.fm>
     class Data
       private
+
       def convert_hash_keys(value)
         return value unless value.is_a?(Hash)
 

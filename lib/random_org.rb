@@ -45,21 +45,26 @@ module RandomOrg
 
   # RandomOrg.random_number generates a random number.
   #
-  # If a positive integer is given as +maximum+,
-  # RandomOrg.random_number returns an integer:
-  #   0 <= RandomOrg.random_number(maximum) < maximum
+  # If a positive integer is given as +maximum+, it returns an Integer.
+  # If +0+ is given or an argument is not given, it returns a Float.
   #
-  # If 0 is given or an argument is not given,
-  # RandomOrg.random_number returns a float:
-  #   0.0 <= RandomOrg.random_number() < 1.0
+  # @example Generating random integer with a given maximum
+  #   0 <= RandomOrg.random_number(42) && RandomOrg.random_number(42) <= 42
+  #   => true
   #
-  # @param [Numeric] maximum maximum if the value given is +> 0+
+  # @example Generating random Float
+  #   0 <= RandomOrg.random_number && RandomOrg.random_number <= 1.0
+  #   => true
+  #
+  # @param [Integer] maximum maximum if the value given is +> 0+
+  # @return [Integer, Float] a random number in the range +[0,1.0]+ or
+  #   +[0,maximum]+.
   def self.random_number(maximum = 0)
     min = 0
     if maximum.zero?
       response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: min,
                                                              decimal_places: 14)
-    else
+    elsif maximum.is_a? Integer
       response = RandomOrg::Basic.generate_integers(n: 1, min: min,
                                                     max: maximum)
     end
@@ -73,6 +78,7 @@ module RandomOrg
   #
   # @param [Numeric] length the length of the random string, if not specified,
   #   16 is assumed.
+  # @return [String] a random hex string.
   def self.hex(length = 16)
     size = length * 8
     req = RandomOrg::ApiClient.build_request('generateBlobs',
@@ -90,6 +96,7 @@ module RandomOrg
   #
   # @param [Numeric] length the length of the random string, if not specified,
   #   16 is assumed.
+  # @return [String] a random base64 string.
   def self.base64(length = 16)
     size = length * 8
     req = RandomOrg::ApiClient.build_request('generateBlobs',
@@ -112,6 +119,7 @@ module RandomOrg
   #   16 is assumed.
   # @param [Boolean] padding specifies the padding: if false or nil, padding is
   #   not generated, otherwise padding is generated.
+  # @return [String] a random URL-safe base64 string.
   def self.urlsafe_base64(length = nil, padding = false)
     s = base64 length
     s.tr!('+/', '-_')
@@ -122,9 +130,10 @@ module RandomOrg
   # RandomOrg.uuid generates a v4 random UUID (Universally Unique IDentifier).
   #
   # The version 4 UUID is purely random (except the version). It doesn't
-  #   contain meaningful information such as MAC address, time, etc.
+  # contain meaningful information such as MAC address, time, etc.
   #
   # See RFC 4122 for details of UUID.
+  # @return [String] a v4 random UUID (Universally Unique IDentifier).
   def self.uuid
     req = RandomOrg::ApiClient.build_request('generateUUIDs', n: 1)
     response = RandomOrg::ApiClient.perform_request(req)
