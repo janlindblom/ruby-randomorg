@@ -7,6 +7,8 @@ require 'random_org/response/integers'
 require 'random_org/response/integer_sequences'
 require 'random_org/response/decimal_fractions'
 require 'random_org/response/gaussians'
+require 'random_org/response/strings'
+require 'random_org/response/uuids'
 
 module RandomOrg
   # An API response as an object.

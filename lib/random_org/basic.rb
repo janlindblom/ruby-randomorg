@@ -108,9 +108,10 @@ module RandomOrg
       # known as a normal distribution).
       #
       # @see https://api.random.org/json-rpc/2/basic#generateGaussians
+      #
       # @param [Hash] opts options
-      # @option opts [Integer] :n how many random decimal fractions you need.
-      #   Must be within the +[1,10000]+ range.
+      # @option opts [Integer] :n how many random numbers you need. Must be
+      #   within the +[1,10000]+ range.
       # @option opts [Integer] :mean the distribution's mean. Must be within
       #   the +[-1000000,1000000]+ range.
       # @option opts [Integer] :standard_deviation the distribution's standard
@@ -138,20 +139,43 @@ module RandomOrg
       # @see https://api.random.org/json-rpc/2/basic#generateStrings
       #
       # @param [Hash] opts options
+      # @option opts [Integer] :n how many random decimal fractions you need.
+      #   Must be within the +[1,10000]+ range.
+      # @option opts [Integer] :length the length of each string. Must be
+      #   within the +[1,32]+ range. All strings will be of the same length.
+      # @option opts [Integer] :characters a string that contains the set of
+      #   characters that are allowed to occur in the random strings. The
+      #   maximum number of characters is +128+.
+      # @return [RandomOrg::Response::Strings]
       def generate_strings(opts = nil)
         verify_arguments(opts, %i[n length characters])
         verify_n(opts, 1, 10_000)
         verify_param(:length, opts, 1, 32)
         verify_string(:characters, opts, 0, 128)
+        RandomOrg::Response::Strings.new perform_and_process(
+          'generateStrings',
+          opts
+        )
       end
 
       #
-      # Generates UUID strings.
+      # Generates version 4 true random Universally Unique IDentifiers (UUIDs)
+      # in accordance with section 4.4 of RFC 4122.
       #
-      # @return [String]
+      # @see https://api.random.org/json-rpc/2/basic#generateUUIDs
+      # @see http://www.ietf.org/rfc/rfc4122.txt RFC 4122
       #
-      def generate_uuids
-        # TODO
+      # @param [Hash] opts options
+      # @option opts [Integer] :n how many random UUIDs you need. Must be
+      #   within the +[1,1000]+ range.
+      # @return [RandomOrg::Response::Strings]
+      def generate_uuids(opts = nil)
+        verify_arguments(opts, %i[n])
+        verify_n(opts, 1, 1_000)
+        RandomOrg::Response::UUIDs.new perform_and_process(
+          'generateUUIDs',
+          opts
+        )
       end
 
       # TODO

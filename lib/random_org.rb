@@ -133,9 +133,7 @@ module RandomOrg
   # See RFC 4122 for details of UUID.
   # @return [String] a v4 random UUID (Universally Unique IDentifier).
   def self.uuid
-    req = RandomOrg::ApiClient.build_request('generateUUIDs', n: 1)
-    response = RandomOrg::ApiClient.perform_request(req)
-    response['result']['random']['data'].first
+    RandomOrg::Basic.generate_uuids(n: 1).data.first
   end
 
   class << self
