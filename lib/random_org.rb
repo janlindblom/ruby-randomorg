@@ -74,36 +74,26 @@ module RandomOrg
   #
   # The length of the result string is twice of +length+.
   #
-  # @param [Numeric] length the length of the random string, if not specified,
+  # @param [Integer] length the length of the random string, if not specified,
   #   16 is assumed.
   # @return [String] a random hex string.
   def self.hex(length = 16)
     size = length * 8
-    req = RandomOrg::ApiClient.build_request('generateBlobs',
-                                             n: 1,
-                                             size: size,
-                                             format: 'hex')
-    response = RandomOrg::ApiClient.perform_request(req)
-    processed = RandomOrg::ApiClient.process_response(response)
-    processed['data'].first
+    response = RandomOrg::Basic.generate_blobs(n: 1, size: size, format: :hex)
+    response.data.first
   end
 
   # RandomOrg.base64 generates a random base64 string.
   #
   # The length of the result string is about 4/3 of +length+.
   #
-  # @param [Numeric] length the length of the random string, if not specified,
+  # @param [Integer] length the length of the random string, if not specified,
   #   16 is assumed.
   # @return [String] a random base64 string.
   def self.base64(length = 16)
     size = length * 8
-    req = RandomOrg::ApiClient.build_request('generateBlobs',
-                                             n: 1,
-                                             size: size,
-                                             format: 'base64')
-    response = RandomOrg::ApiClient.perform_request(req)
-    processed = RandomOrg::ApiClient.process_response(response)
-    processed['data'].first
+    response = RandomOrg::Basic.generate_blobs(n: 1, size: size)
+    response.data.first
   end
 
   # RandomOrg.urlsafe_base64 generates a random URL-safe base64 string.
@@ -118,8 +108,8 @@ module RandomOrg
   # @param [Boolean] padding specifies the padding: if false or nil, padding is
   #   not generated, otherwise padding is generated.
   # @return [String] a random URL-safe base64 string.
-  def self.urlsafe_base64(length = nil, padding = false)
-    s = base64 length
+  def self.urlsafe_base64(length = 16, padding = false)
+    s = base64(length)
     s.tr!('+/', '-_')
     s.delete!('=') unless padding
     s

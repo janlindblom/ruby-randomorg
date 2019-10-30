@@ -8,7 +8,7 @@ module RandomOrg
     #
     # @version 0.2.2
     # @author Jan Lindblom <janlindblom@fastmail.fm>
-    class BLOBs < RandomData
+    class Blobs < RandomData
     end
   end
 end

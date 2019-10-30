@@ -201,8 +201,8 @@ module RandomOrg
           raise RandomOrg::ArgumentError, 'size parameter is not divisable by 8'
         end
 
-        RandomOrg::Response::BLOBs.new perform_and_process(
-          'generateBLOBs',
+        RandomOrg::Response::Blobs.new perform_and_process(
+          'generateBlobs',
           opts
         )
       end
