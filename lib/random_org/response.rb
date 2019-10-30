@@ -9,6 +9,7 @@ require 'random_org/response/decimal_fractions'
 require 'random_org/response/gaussians'
 require 'random_org/response/strings'
 require 'random_org/response/uuids'
+require 'random_org/response/blobs'
 
 module RandomOrg
   # An API response as an object.

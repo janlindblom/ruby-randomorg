@@ -178,9 +178,33 @@ module RandomOrg
         )
       end
 
-      # TODO
-      def generate_blobs
-        # TODO
+      # Generates Binary Large OBjects (BLOBs) containing true random data.
+      #
+      # The total size of all blobs requested must not exceed +1,048,576+ bits
+      # (+128 KiB+).
+      #
+      # @param [Hash] opts options
+      # @option opts [Integer] :n how many random blobs you need. Must be
+      #   within the +[1,100]+ range.
+      # @option opts [Integer] :size the size of each blob, measured in bits.
+      #   Must be within the +[1,1048576]+ range and must be divisible by +8+.
+      # @option opts [Symbol] :format (:base64) specifies the format in which
+      #   the blobs will be returned. Values allowed are +base64+ and +hex+.
+      def generate_blobs(opts = nil)
+        verify_arguments(opts, %i[n size])
+        verify_n(opts, 1, 100)
+        verify_param(:size, opts, 1, 1_048_576)
+        if opts.key? :format
+          verify_symbol(opts[:format], %i[base64 hex])
+        end
+        if opts[:size] % 8 != 0
+          raise RandomOrg::ArgumentError, 'size parameter is not divisable by 8'
+        end
+
+        RandomOrg::Response::BLOBs.new perform_and_process(
+          'generateBLOBs',
+          opts
+        )
       end
 
       # Returns information related to the the usage of a given API key.
@@ -192,6 +216,11 @@ module RandomOrg
       end
 
       private
+
+      def verify_symbol(symbol, allowed = [])
+        message = "symbol #{symbol} is not allowed"
+        raise RandomOrg::ArgumentError, message unless allowed.member? symbol
+      end
 
       def perform_and_process(function = nil, opts = nil, random_data = true)
         req = RandomOrg::ApiClient.build_request(function, opts)
