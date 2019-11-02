@@ -36,8 +36,8 @@ context 'With an API key and live internet connection' do
       end
 
       it 'can return a random integer in a given interval 0 <= n < max' do
-        max = Random.rand(1..9)
-        rndnum = RandomOrg.random_number(max - 1)
+        max = Random.rand(1..99)
+        rndnum = RandomOrg.random_number(max)
 
         expect(rndnum).to be_a Integer
         expect(rndnum).to be < max
