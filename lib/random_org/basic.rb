@@ -2,7 +2,7 @@
 
 require 'random_org/api_client'
 require 'random_org/argument_error'
-require 'random_org/response/usage'
+require 'random_org/response'
 
 module RandomOrg
   # Methods for accessing the "Basic" API.

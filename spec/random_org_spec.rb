@@ -26,6 +26,24 @@ context 'With an API key and live internet connection' do
     expect(RandomOrg.configuration.api_key).to eq ENV['RANDOM_ORG_API_KEY']
   end
 
+  describe RandomOrg::Basic do
+    describe '#generate_integers' do
+      it 'can return random integers in the given range' do
+        min = 0
+        max = 100
+        n = 5
+        integers_response = RandomOrg::Basic.generate_integers({n: n, min: min, max: max})
+        expect(integers_response).to be_a RandomOrg::Response::Integers
+        expect(integers_response.data).to be_a Array
+        expect(integers_response.data.size).to be n
+        integers_response.data.each do |integer|
+          expect(integer).to be <= max
+          expect(integer).to be >= min
+        end
+      end
+    end
+  end
+
   describe RandomOrg do
     describe '#random_number' do
       it 'can return a random float in the interval 0.0 <= n < 1.0' do
@@ -36,8 +54,8 @@ context 'With an API key and live internet connection' do
       end
 
       it 'can return a random integer in a given interval 0 <= n < max' do
-        max = Random.rand(1..99)
-        rndnum = RandomOrg.random_number(max)
+        max = Random.rand(2..99)
+        rndnum = RandomOrg.random_number(max - 1)
 
         expect(rndnum).to be_a Integer
         expect(rndnum).to be < max
@@ -114,8 +132,8 @@ context 'With an API key and live internet connection' do
       end
 
       it 'can return a random integer in a given interval 0 <= n < max' do
-        max = Random.rand(100)
-        rndnum = @rng.rand(max)
+        max = 1 + Random.rand(100)
+        rndnum = @rng.rand(max - 1)
 
         expect(rndnum).to be_a Integer
         expect(rndnum).to be >= 0
