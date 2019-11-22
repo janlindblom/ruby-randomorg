@@ -60,13 +60,13 @@ module RandomOrg
   # @return [Integer, Float] a random number in the range +[0,1.0]+ or
   #   +[0,maximum]+.
   def self.random_number(maximum = 0)
-    if maximum.is_a?(Integer) && !maximum.zero?
-      response = RandomOrg::Basic.generate_integers(n: 1, min: 0,
-                                                    max: maximum)
-    elsif maximum.is_a?(Float) || maximum.zero? || maximum.nil?
+    if maximum.is_a?(Float) || maximum.zero? || maximum.nil?
       response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: 0,
                                                              decimal_places: 14)
       return response.data.first * maximum if maximum.is_a? Float
+    elsif maximum.is_a? Integer
+      response = RandomOrg::Basic.generate_integers(n: 1, min: 0,
+                                                    max: maximum)
     end
     response.data.first
   end
