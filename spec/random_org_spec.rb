@@ -98,7 +98,7 @@ context 'With an API key and live internet connection' do
       end
 
       it 'returns a base64 encoded string with a given number of random bytes if a numerical argument is passed' do
-        size = Random.rand(24)
+        size = Random.rand(24) + 1
         rndbstr = RandomOrg.base64(size)
 
         expect(rndbstr).to be_a String
@@ -115,33 +115,39 @@ context 'With an API key and live internet connection' do
       end
 
       it 'can return a random float in the interval 0.0 <= n < 1.0' do
-        rndnum = @rng.rand
+        (1..5).each do |i|
+          rndnum = @rng.rand
 
-        expect(rndnum).to be_a Float
-        expect(rndnum).to be >= 0
-        expect(rndnum).to be < 1.0
+          expect(rndnum).to be_a Float
+          expect(rndnum).to be >= 0
+          expect(rndnum).to be < 1.0
+        end
       end
 
       it 'can return a random float in a given interval 0.0 <= n < max' do
-        max = Random.rand(100.0)
-        rndnum = @rng.rand(max)
+        (1..5).each do |i|
+          max = Random.rand(100.0)
+          rndnum = @rng.rand(max)
 
-        expect(rndnum).to be_a Float
-        expect(rndnum).to be >= 0
-        expect(rndnum).to be < max
+          expect(rndnum).to be_a Float
+          expect(rndnum).to be >= 0
+          expect(rndnum).to be < max
+        end
       end
 
       it 'can return a random integer in a given interval 0 <= n < max' do
-        max = 1 + Random.rand(100)
-        rndnum = @rng.rand(max - 1)
+        (1..5).each do |i|
+          max = 1 + Random.rand(100)
+          rndnum = @rng.rand(max)
 
-        expect(rndnum).to be_a Integer
-        expect(rndnum).to be >= 0
-        expect(rndnum).to be < max
+          expect(rndnum).to be_a Integer
+          expect(rndnum).to be >= 0
+          expect(rndnum).to be < max
+        end
       end
 
       it 'can return a random element in a given Range 0..n' do
-        range = 0..Random.rand(10)
+        range = 0..(Random.rand(10) + 1)
         rndnum = @rng.rand(range)
 
         expect(rndnum).to be_a Integer

@@ -56,16 +56,17 @@ module RandomOrg
   #   0 <= RandomOrg.random_number && RandomOrg.random_number <= 1.0
   #   => true
   #
-  # @param [Integer] maximum maximum if the value given is +> 0+
+  # @param [Integer, Float] maximum maximum if the value given is +> 0+
   # @return [Integer, Float] a random number in the range +[0,1.0]+ or
   #   +[0,maximum]+.
   def self.random_number(maximum = 0)
-    if maximum.zero?
-      response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: 0,
-                                                             decimal_places: 14)
-    elsif maximum.is_a? Integer
+    if maximum.is_a?(Integer) && !maximum.zero?
       response = RandomOrg::Basic.generate_integers(n: 1, min: 0,
                                                     max: maximum)
+    elsif maximum.is_a?(Float) || maximum.zero? || maximum.nil?
+      response = RandomOrg::Basic.generate_decimal_fractions(n: 1, min: 0,
+                                                             decimal_places: 14)
+      return response.data.first * maximum if maximum.is_a? Float
     end
     response.data.first
   end

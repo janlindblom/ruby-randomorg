@@ -30,7 +30,7 @@ module RandomOrg
     # When +max+ is a Range, +rand+ returns a random number where
     # +range.member?(number) == true+.
     #
-    # @param [Numeric] max maximum
+    # @param [Integer, Float, Range] max maximum
     # @return [Numeric] a random number in the interval +0 <= n < max+
     def rand(max = nil)
       RandomOrg::Rng.rand(max)
@@ -48,20 +48,14 @@ module RandomOrg
     # @param [nil, Integer, Float, Range] max maximum
     # @return [Numeric] a random number in the interval +0 <= n < max+
     def self.rand(max = nil)
-      return max.to_a.sample(random: RandomOrg::Rng.new) if max.is_a? Range
+      if max.is_a? Range
+        max_array = max.to_a
+        return max_array.sample(random: RandomOrg::Rng.new)
+      end
       return RandomOrg.random_number if max.nil? || max.zero?
-      return RandomOrg.random_number(max) if max.is_a? Integer
-      return build_float_rand(max) if max.is_a? Float
+      return RandomOrg.random_number(max) if max.is_a? Numeric
 
       raise ArgumentError, 'Given argument must be correct type.'
-    end
-
-    private_class_method def self.build_float_rand(max)
-      whole = max.to_i
-      rem = ((max - whole) * (10**9)).round
-      whole = RandomOrg.random_number(whole)
-      rem = RandomOrg.random_number(rem).to_f / (10**9)
-      whole + rem
     end
   end
 end
