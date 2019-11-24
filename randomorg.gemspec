@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<simplecov-rcov>.freeze, ["~> 0.2"])
       s.add_development_dependency(%q<yard>.freeze, ["~> 0.9"])
       s.add_development_dependency(%q<solargraph>.freeze, ["~> 0.37"])
+      s.add_development_dependency(%q<simplecov-small-badge>.freeze, ["~> 0.2"])
       s.add_runtime_dependency(%q<rest-client>.freeze, ["~> 2"])
       s.add_runtime_dependency(%q<version>.freeze, ["~> 1"])
     else
@@ -47,6 +48,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<simplecov-rcov>.freeze, ["~> 0.2"])
       s.add_dependency(%q<yard>.freeze, ["~> 0.9"])
       s.add_dependency(%q<solargraph>.freeze, ["~> 0.37"])
+      s.add_dependency(%q<simplecov-small-badge>.freeze, ["~> 0.2"])
       s.add_dependency(%q<rest-client>.freeze, ["~> 2"])
       s.add_dependency(%q<version>.freeze, ["~> 1"])
     end
@@ -62,6 +64,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<simplecov-rcov>.freeze, ["~> 0.2"])
     s.add_dependency(%q<yard>.freeze, ["~> 0.9"])
     s.add_dependency(%q<solargraph>.freeze, ["~> 0.37"])
+    s.add_dependency(%q<simplecov-small-badge>.freeze, ["~> 0.2"])
     s.add_dependency(%q<rest-client>.freeze, ["~> 2"])
     s.add_dependency(%q<version>.freeze, ["~> 1"])
   end
