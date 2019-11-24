@@ -12,7 +12,7 @@ module RandomOrg
     # Returns a random binary string containing +size+ bytes.
     # @return [String] a random binary string containing +size+ bytes
     def bytes(size = nil)
-      RandomOrg::Rng.random_bytes(size)
+      RandomOrg::Rng.bytes(size)
     end
 
     # Returns a random binary string containing +size+ bytes.
@@ -33,6 +33,7 @@ module RandomOrg
     # @param [Integer, Float, Range] max maximum
     # @return [Numeric] a random number in the interval +0 <= n < max+
     def rand(max = nil)
+      max -= 1 if max.is_a? Integer
       RandomOrg::Rng.rand(max)
     end
 
@@ -52,8 +53,7 @@ module RandomOrg
         max_array = max.to_a
         return max_array.sample(random: RandomOrg::Rng.new)
       end
-      return RandomOrg.random_number if max.nil? || max.zero?
-      return RandomOrg.random_number(max) if max.is_a? Numeric
+      return RandomOrg.random_number(max) if max.is_a?(Numeric) || max.nil?
 
       raise ArgumentError, 'Given argument must be correct type.'
     end

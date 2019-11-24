@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe RandomOrg do
@@ -27,12 +29,27 @@ context 'With an API key and live internet connection' do
   end
 
   describe RandomOrg::Basic do
+    describe '#usage' do
+      it 'can return account usage data' do
+        usage = RandomOrg::Basic.usage
+        expect(usage).to be_a RandomOrg::Response::Usage
+        expect(usage.bits_left).to be_a Integer
+        expect(usage.requests_left).to be_a Integer
+        expect(usage.total_requests).to be_a Integer
+        expect(usage.creation_time).to be_a DateTime
+        expect(usage.total_bits).to be_a Integer
+        expect(usage.status).to be_a String
+      end
+    end
+
+
     describe '#generate_integers' do
       it 'can return random integers in the given range' do
         min = 0
         max = 100
         n = 5
-        integers_response = RandomOrg::Basic.generate_integers({n: n, min: min, max: max})
+        integers_response = RandomOrg::Basic.generate_integers(n: n, min: min,
+                                                               max: max)
         expect(integers_response).to be_a RandomOrg::Response::Integers
         expect(integers_response.data).to be_a Array
         expect(integers_response.data.size).to be n
@@ -40,6 +57,43 @@ context 'With an API key and live internet connection' do
           expect(integer).to be <= max
           expect(integer).to be >= min
         end
+      end
+    end
+
+    describe '#generate_integer_sequences' do
+      it 'can generate sequences of random integers' do
+        n = 5
+        min = 0
+        max = 100
+        length = 5
+        integer_sequences = RandomOrg::Basic.generate_integer_sequences(n: n,
+                                                                        min: min,
+                                                                        max: max,
+                                                                        length: length)
+        expect(integer_sequences).to be_a RandomOrg::Response::IntegerSequences
+      end
+    end
+
+    describe '#generate_decimal_fractions' do
+      it 'can return random decimal fractions' do
+        n = 1
+        decimals = 4
+        fractions = RandomOrg::Basic.generate_decimal_fractions(n: n,
+                                                                decimal_places: decimals)
+        expect(fractions).to be_a RandomOrg::Response::DecimalFractions
+      end
+    end
+
+    describe '#generate_gaussians' do
+      it 'can return random numbers from a gaussian distribution' do
+        n = 1
+        mean = 0
+        standard_deviation = 1
+        significant_digits = 2
+        gaussian = RandomOrg::Basic.generate_gaussians(n: n, mean: mean,
+                                                       standard_deviation: standard_deviation,
+                                                       significant_digits: significant_digits)
+        expect(gaussian).to be_a RandomOrg::Response::Gaussians
       end
     end
   end
@@ -72,7 +126,7 @@ context 'With an API key and live internet connection' do
       end
 
       it 'returns a string with a given number random bytes if a numerical argument is passed' do
-        size = 1 + Random.rand(22)
+        size = Random.rand(1..22)
         rndstr = RandomOrg.random_bytes(size)
 
         expect(rndstr).to be_a String
@@ -93,16 +147,16 @@ context 'With an API key and live internet connection' do
         rndbstr = RandomOrg.base64
 
         expect(rndbstr).to be_a String
-        expect(rndbstr).to match(/^([A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{4}|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{2}==)$/)
+        expect(rndbstr).to match(%r{^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$})
         expect(rndbstr.unpack('m*')[0].size).to eq(16)
       end
 
       it 'returns a base64 encoded string with a given number of random bytes if a numerical argument is passed' do
-        size = Random.rand(24) + 1
+        size = Random.rand(1..24)
         rndbstr = RandomOrg.base64(size)
 
         expect(rndbstr).to be_a String
-        expect(rndbstr).to match(/^([A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{4}|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{2}==)$/)
+        expect(rndbstr).to match(%r{^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$})
         expect(rndbstr.unpack('m*')[0].size).to eq(size)
       end
     end
@@ -115,7 +169,7 @@ context 'With an API key and live internet connection' do
       end
 
       it 'can return a random float in the interval 0.0 <= n < 1.0' do
-        (1..5).each do |i|
+        (1..3).each do |_i|
           rndnum = @rng.rand
 
           expect(rndnum).to be_a Float
@@ -125,7 +179,7 @@ context 'With an API key and live internet connection' do
       end
 
       it 'can return a random float in a given interval 0.0 <= n < max' do
-        (1..5).each do |i|
+        (1..3).each do |_i|
           max = Random.rand(100.0)
           rndnum = @rng.rand(max)
 
@@ -136,8 +190,8 @@ context 'With an API key and live internet connection' do
       end
 
       it 'can return a random integer in a given interval 0 <= n < max' do
-        (1..5).each do |i|
-          max = 1 + Random.rand(100)
+        (1..3).each do |_i|
+          max = Random.rand(1..100)
           rndnum = @rng.rand(max)
 
           expect(rndnum).to be_a Integer
@@ -147,11 +201,21 @@ context 'With an API key and live internet connection' do
       end
 
       it 'can return a random element in a given Range 0..n' do
-        range = 0..(Random.rand(10) + 1)
+        range = 0..(Random.rand(1..10))
         rndnum = @rng.rand(range)
 
         expect(rndnum).to be_a Integer
         expect(range.to_a).to include(rndnum)
+      end
+
+      it 'can return a String of random bytes' do
+        rnd_str = @rng.bytes 8
+        expect(rnd_str).to be_a String
+        expect(rnd_str.length).to be 8
+      end
+
+      it 'throws an error if arguments are of the wrong type' do
+        expect{@rng.rand("String")}.to raise_error(RandomOrg::ArgumentError)
       end
     end
   end
