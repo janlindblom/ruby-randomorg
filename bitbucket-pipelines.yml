@@ -14,9 +14,10 @@ pipelines:
             - bundle exec rake spec
             - bundle exec rake yard
             - bundle exec rake rubocop
+            - curl -X POST --user "${BB_AUTH_STRING}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"pkg/*.gem"
     develop:
       - step:
-          name: Test development
+          name: Development test
           deployment: test-dev
           caches:
             - bundler
@@ -24,9 +25,10 @@ pipelines:
             - bundle install --path=./vendor
             - bundle exec rake build
             - bundle exec rake spec
+            - curl -X POST --user "${BB_AUTH_STRING}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"pkg/*.gem"
     feature/*:
       - step:
-          name: Test feature
+          name: Feature test
           deployment: test-feature
           caches:
             - bundler
