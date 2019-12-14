@@ -23,13 +23,15 @@ s = Gem::Specification.new do |spec|
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f|
-    f.match(%r{^(bin|test|spec|features)/}) ||
+    f.match(%r{^(bin|test|spec|features|.vscode)/}) ||
       f == '.travis.yml' ||
       f == 'buildspec.yml' ||
       f == 'bitbucket-pipelines.yml' ||
       f == '.rubocop.yml' ||
       f == '.rubocop_todo.yml' ||
-      f == '.editorconfig'
+      f == '.editorconfig' ||
+      f == '.gitignore' ||
+      f == '.rspec'
   }
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
