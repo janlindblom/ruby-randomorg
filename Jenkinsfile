@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label: 'ruby'
+    label 'ruby'
   }
 
   stages {
