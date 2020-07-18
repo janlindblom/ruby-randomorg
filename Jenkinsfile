@@ -3,6 +3,10 @@ pipeline {
     label 'ruby'
   }
 
+  environment {
+    RANDOM_ORG_API_KEY = credentials('random_org_api_key')
+  }
+
   stages {
     stage('Setup') {
       steps {
