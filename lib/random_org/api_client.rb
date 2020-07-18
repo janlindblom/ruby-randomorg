@@ -10,15 +10,13 @@ module RandomOrg
   # @api private
   class ApiClient
     # Constructs a request to the API
-    # @param [Symbol] which_request request to build
+    # @param [String] api_method request to build
     # @param [Hash,nil] args arguments
     # @return [Hash] prebuilt request
-    def self.build_request(which_request, args = nil)
+    def self.build_request(api_method, args = nil)
       req = base_request
       req[:params] = args.merge('apiKey' => RandomOrg.configuration.api_key)
-
-      req[:method] = setup_request_method(which_request)
-
+      req[:method] = api_method
       req
     end
 
@@ -46,17 +44,24 @@ module RandomOrg
       }
     end
 
-    private_class_method def self.setup_request_method(which_request)
-      case which_request
-      when :generate_integers
-        'generateIntegers'
-      when :generate_decimal_fractions
-        'generateDecimalFractions'
-      when :generate_blobs
-        'generateBlobs'
-      when :generate_uuids
-        'generateUUIDs'
-      end
+    # Process the API response from the random.org API call.
+    #
+    # @param [Hash] response the response to the request
+    # @return [Hash] the returned data object
+    def self.process_response(response, expect_random_data = true)
+      bad_response_error(response) unless response.key? 'result'
+      result = response['result']
+      return result unless expect_random_data
+
+      bad_response_error(response) unless result.key? 'random'
+      random = result['random']
+      bad_response_error(response) unless random.key? 'data'
+      # random['data'].first
+      random
+    end
+
+    def self.bad_response_error(response)
+      raise ApiError, "Something is wrong with the response: #{response}"
     end
 
     private_class_method def self.api_server_error
