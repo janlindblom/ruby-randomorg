@@ -3,12 +3,13 @@
 require 'simplecov'
 require 'simplecov_small_badge'
 
-formatters = [
-  SimpleCov::Formatter::HTMLFormatter,
-  SimpleCovSmallBadge::Formatter
-]
-SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new(formatters)
-SimpleCov.start
+SimpleCov.start do
+  formatters = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCovSmallBadge::Formatter
+  ])
+  minimum_coverage 75
+end
 
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'dotenv'
