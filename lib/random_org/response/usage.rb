@@ -32,7 +32,7 @@ module RandomOrg
 
       # Initialize a new Usage object.
       def initialize(args = {})
-        super(args)
+        super()
         convert_hash_keys(args).each { |k, v| public_send("#{k}=", v) }
       end
 
