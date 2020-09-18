@@ -48,7 +48,7 @@ module RandomOrg
     #
     # @param [Hash] response the response to the request
     # @return [Hash] the returned data object
-    def self.process_response(response, expect_random_data = true)
+    def self.process_response(response, expect_random_data: true)
       bad_response_error(response) unless response.key? 'result'
       result = response['result']
       return result unless expect_random_data

@@ -109,7 +109,7 @@ module RandomOrg
   # @param [Boolean] padding specifies the padding: if false or nil, padding is
   #   not generated, otherwise padding is generated.
   # @return [String] a random URL-safe base64 string.
-  def self.urlsafe_base64(length = 16, padding = false)
+  def self.urlsafe_base64(length = 16, padding: false)
     s = base64(length)
     s.tr!('+/', '-_')
     s.delete!('=') unless padding

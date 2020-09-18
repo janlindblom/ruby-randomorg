@@ -12,10 +12,9 @@ module RandomOrg
       def convert_hash_keys(value)
         return value unless value.is_a?(Hash)
 
-        result = value.each_with_object({}) do |(key, val), new|
+        value.each_with_object({}) do |(key, val), new|
           new[to_snake_case(key.to_s).to_sym] = convert_hash_keys(val)
         end
-        result
       end
 
       def to_snake_case(string)

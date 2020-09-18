@@ -17,6 +17,7 @@ module RandomOrg
       attr_reader :completion_time
 
       def initialize(args = {})
+        super(args)
         convert_hash_keys(args).each { |k, v| public_send("#{k}=", v) }
       end
 
