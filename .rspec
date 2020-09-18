@@ -1,6 +1,6 @@
 --format RspecJunitFormatter
---out spec/reports/rspec.xml
+--out test-reports/rspec.xml
 --format html
---out spec/reports/rspec.html
+--out test-reports/rspec.html
 --format documentation
 --color
