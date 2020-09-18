@@ -222,7 +222,7 @@ module RandomOrg
         raise RandomOrg::ArgumentError, message unless allowed.member? symbol
       end
 
-      def perform_and_process(function = nil, opts = nil, random_data = true)
+      def perform_and_process(function = nil, opts = nil, random_data: true)
         req = RandomOrg::ApiClient.build_request(function, opts)
         response = RandomOrg::ApiClient.perform_request(req)
         RandomOrg::ApiClient.process_response(response, random_data)
@@ -280,9 +280,10 @@ module RandomOrg
 
       def verify_min_max(params, allowed_min, allowed_max)
         %i[min max].each do |k|
-          if params[k].is_a? Numeric
+          case params[k]
+          when Numeric
             verify_range(k, params[k], allowed_min, allowed_max)
-          elsif params[k].is_a? Array
+          when Array
             params[k].each do |num|
               verify_range(k, num, allowed_min, allowed_max)
             end

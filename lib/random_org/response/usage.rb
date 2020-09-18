@@ -27,15 +27,12 @@ module RandomOrg
     #   @return [Integer] an integer containing the number of requests used by
     #     this API key since it was created.
     class Usage < Data
-      attr_accessor :status
+      attr_accessor :status, :bits_left, :requests_left, :total_bits, :total_requests
       attr_reader :creation_time
-      attr_accessor :bits_left
-      attr_accessor :requests_left
-      attr_accessor :total_bits
-      attr_accessor :total_requests
 
       # Initialize a new Usage object.
       def initialize(args = {})
+        super(args)
         convert_hash_keys(args).each { |k, v| public_send("#{k}=", v) }
       end
 
