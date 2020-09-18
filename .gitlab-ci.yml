@@ -34,23 +34,11 @@ rspec:
 yard:
   stage: verify
   needs: ["build"]
-  only:
-    refs:
-      - master
-      - release/*
-  except:
-    - tags
   script:
     - bundle exec rake yard
 
 rubocop:
   stage: verify
   needs: ["build"]
-  only:
-    refs:
-      - master
-      - release/*
-  except:
-    - tags
   script:
     - bundle exec rake rubocop
