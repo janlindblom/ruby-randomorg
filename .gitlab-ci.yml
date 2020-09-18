@@ -1,0 +1,55 @@
+image: "ruby:2.4"
+
+stages:
+  - build
+  - test
+  - verify
+
+before_script:
+  - gem install bundler --version 2.1.4 --no-document
+  - bundle install --jobs $(nproc)  "${FLAGS[@]}"
+
+build:
+  stage: build
+  script:
+    - bundle exec rake build
+  artifacts:
+    paths:
+      - pkg/*.gem
+
+rspec:
+  stage: test
+  needs: ["build"]
+  except:
+    - tags
+  script:
+    - bundle exec rake spec
+  artifacts:
+    paths:
+      - test-reports/rspec.xml
+    reports:
+      junit: test-reports/rspec.xml
+
+yard:
+  stage: verify
+  needs: ["build"]
+  only:
+    refs:
+      - master
+      - release/*
+  except:
+    - tags
+  script:
+    - bundle exec rake yard
+
+rubocop:
+  stage: verify
+  needs: ["build"]
+  only:
+    refs:
+      - master
+      - release/*
+  except:
+    - tags
+  script:
+    - bundle exec rake rubocop

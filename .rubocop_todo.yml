@@ -7,7 +7,9 @@
 # versions of RuboCop, may require this file to be generated again.
 
 
-# Offense count: 5
+Layout/EndOfLine:
+  Enabled: false
+
 # Configuration parameters: CountComments, ExcludedMethods.
 # ExcludedMethods: refine
 Metrics/BlockLength:
