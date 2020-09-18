@@ -27,6 +27,7 @@ rspec:
   artifacts:
     paths:
       - test-reports/rspec.xml
+      - coverage/coverage_badge_total.svg
     reports:
       junit: test-reports/rspec.xml
 
