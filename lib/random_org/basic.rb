@@ -194,12 +194,8 @@ module RandomOrg
         verify_arguments(opts, %i[n size])
         verify_n(opts, 1, 100)
         verify_param(:size, opts, 1, 1_048_576)
-        if opts.key? :format
-          verify_symbol(opts[:format], %i[base64 hex])
-        end
-        if opts[:size] % 8 != 0
-          raise RandomOrg::ArgumentError, 'size parameter is not divisable by 8'
-        end
+        verify_symbol(opts[:format], %i[base64 hex]) if opts.key? :format
+        raise RandomOrg::ArgumentError, 'size parameter is not divisable by 8' if opts[:size] % 8 != 0
 
         RandomOrg::Response::Blobs.new perform_and_process(
           'generateBlobs',
@@ -241,9 +237,7 @@ module RandomOrg
         raise RandomOrg::ArgumentError, message if [min, max].any?(nil)
 
         message = "parameters must include parameter '#{param}'."
-        unless params.key?(param) || params.key?(param.to_sym)
-          raise RandomOrg::ArgumentError, message
-        end
+        raise RandomOrg::ArgumentError, message unless params.key?(param) || params.key?(param.to_sym)
 
         num = params[param]
         message = "parameter must be in the [#{min}, #{max}] range."
@@ -267,14 +261,10 @@ module RandomOrg
       end
 
       def verify_arguments(opts, required_keys = [])
-        if opts.nil?
-          raise RandomOrg::ArgumentError, 'Missing required arguments.'
-        end
+        raise RandomOrg::ArgumentError, 'Missing required arguments.' if opts.nil?
 
         required_keys.each do |key|
-          unless opts.key? key
-            raise RandomOrg::ArgumentError, "Missing required parameter #{key}"
-          end
+          raise RandomOrg::ArgumentError, "Missing required parameter #{key}" unless opts.key? key
         end
       end
 

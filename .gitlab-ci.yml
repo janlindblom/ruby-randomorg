@@ -27,29 +27,18 @@ rspec:
   artifacts:
     paths:
       - test-reports/rspec.xml
+      - coverage/coverage_badge_total.svg
     reports:
       junit: test-reports/rspec.xml
 
 yard:
   stage: verify
-  needs: ["build"]
-  only:
-    refs:
-      - master
-      - release/*
-  except:
-    - tags
+  needs: ["build", "rspec"]
   script:
     - bundle exec rake yard
 
 rubocop:
   stage: verify
-  needs: ["build"]
-  only:
-    refs:
-      - master
-      - release/*
-  except:
-    - tags
+  needs: ["build", "rspec"]
   script:
     - bundle exec rake rubocop
