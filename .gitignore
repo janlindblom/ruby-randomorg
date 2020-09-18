@@ -9,3 +9,4 @@
 /tmp/
 *.un~
 .env
+/test-reports/
