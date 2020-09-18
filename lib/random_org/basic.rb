@@ -222,7 +222,7 @@ module RandomOrg
         raise RandomOrg::ArgumentError, message unless allowed.member? symbol
       end
 
-      def perform_and_process(function = nil, opts = nil, random_data: true)
+      def perform_and_process(function = nil, opts = nil, random_data = true)
         req = RandomOrg::ApiClient.build_request(function, opts)
         response = RandomOrg::ApiClient.perform_request(req)
         RandomOrg::ApiClient.process_response(response, random_data)

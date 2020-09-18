@@ -34,3 +34,8 @@ Metrics/MethodLength:
 Style/IfUnlessModifier:
   Exclude:
     - 'lib/random_org/basic.rb'
+
+Style/OptionalBooleanParameter:
+  Exclude:
+    - lib/random_org/api_client.rb
+    - lib/random_org/basic.rb
